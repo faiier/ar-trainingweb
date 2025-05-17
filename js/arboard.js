@@ -479,7 +479,7 @@ function setupModelControls() {
     function handlePan(deltaX, deltaY) {
         const position = modelEntity.getAttribute("position") || initialPosition;
         // ปรับค่า sensitivity ตามความเหมาะสม
-        const sensitivity = 0.005;
+        const sensitivity = 0.01;
         modelEntity.setAttribute("position", {
             x: position.x + deltaX * sensitivity,
             y: position.y - deltaY * sensitivity, // ลบเพื่อให้ทิศทางเป็นธรรมชาติ
