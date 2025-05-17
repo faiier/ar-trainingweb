@@ -106,11 +106,11 @@
   padding: 20px;
   width: 100%;
   max-width: 100%;
-  margin-bottom: 20px;
+  
 }
 
 #question-text {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 1.2rem;
 }
 
@@ -135,8 +135,8 @@
 }
 
 #controls-info {
-  margin-top: 20px;
-  font-size: 0.9rem;
+  margin-top: 10px;
+  font-size: var(--font-size-xs);
   opacity: 0.8;
 }
 
