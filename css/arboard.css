@@ -45,8 +45,6 @@ body {
 }
 
 .a-scene {
-  width: inherit;
-  height: inherit;
   top: 0;
   left: 0;
   overflow: hidden;
