@@ -266,6 +266,13 @@ function setupModelControls() {
     let initialScale = 1;
     let initialPosition = { x: 0, y: 0, z: -3 }; // ตำแหน่งเริ่มต้น
 
+    // ป้องกันการซูมหน้าจอเมื่อมีการ touchmove
+    document.addEventListener('touchmove', function(e) {
+        if (isDragging || isPanning || e.touches.length === 2) {
+            e.preventDefault();
+        }
+    }, { passive: false });
+
     // ==================== สำหรับ Touch Devices ====================
     scene.addEventListener("touchstart", (e) => {
         if (e.touches.length === 1) {
