@@ -1,0 +1,106 @@
+:root {
+  /* Colors */
+  --white-color: #fff;
+  --dark-color: #252525;
+  --primary-color: #231f20;
+  --secondary--color: #ed1c24;
+  --gray--color: #ebebeb;
+
+  /* Font size */
+  --font-size-xs: 0.8rem;
+  --font-size-s: 0.9rem;
+  --font-size-n: 1rem;
+  --font-size-m: 1.12rem;
+  --font-size-l: 1.5rem;
+  --font-size-xl: 2rem;
+  --font-size-xxl: 2.3rem;
+
+  /* Font weight */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Border radius */
+  --border-radius-s: 8px;
+  --border-radius-m: 15px;
+  --border-radius-l: 30px;
+
+  /* Site max width */
+  --site-max-width: 1300px;
+}
+
+html {
+  background: var(--gray--color);
+}
+
+#user-email {
+  text-align: right;
+  font-size: var(--font-size-s);
+  font-weight: var(--font-weight-medium);
+}
+
+#quiz-container {
+  height: 100%;
+  padding: 20px;
+  display: grid;
+  background: var(--gray--color);
+  justify-content: space-between;
+}
+
+#question-number {
+  margin-top: 20px;
+  color: var(--secondary--color);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+img {
+  display: block;
+  max-width: 500px;
+  margin: 50px auto;
+}
+
+#question-text {
+  font-size: var(--font-size-m);
+  font-weight: var(--font-weight-semibold);
+  margin: 20px 0 20px;
+}
+
+.options-container {
+  display: grid;
+  gap: 10px;
+}
+
+.option {
+  padding: 10px;
+  cursor: pointer;
+  text-align: center;
+  background: var(--white-color);
+  border-radius: var(--border-radius-s);
+  font-size: var(--font-size-n);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+.option:hover {
+  border: 2px solid;
+  border-color: var(--secondary--color);
+  color: var(--secondary--color);
+}
+
+/* ใส่ไว้ในไฟล์ .css ของคุณ */
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 6px solid #ddd;
+  border-top-color: var(--secondary--color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 2rem auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
