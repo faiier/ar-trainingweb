@@ -60,35 +60,44 @@ function startQuiz() {
 // โหลดคำถาม
 function loadQuestion(index) {
     const question = quizData[index];
+    questionText.textContent = question.question;
+    optionsContainer.innerHTML = "";
+    feedbackContainer.innerHTML = "";
+
+    // สร้าง array ของ index สำหรับตัวเลือก (0, 1, 2, ...)
+    const optionIndices = question.options.map((_, i) => i);
+
+    // สุ่มลำดับตัวเลือก (แต่เก็บ correctAnswer เดิมไว้สำหรับตรวจสอบ)
+    const shuffledIndices = shuffleArray([...optionIndices]);
 
     // Validation
     if (!question) throw new Error(`Question at index ${index} not found`);
     if (!Array.isArray(question.options)) throw new Error(`Options must be an array`);
     if (question.correctAnswer === undefined) throw new Error(`correctAnswer is required`);
-    
-    questionText.textContent = question.question;
-    optionsContainer.innerHTML = "";
-    feedbackContainer.innerHTML = "";
 
-    question.options.forEach((option, i) => {
+    // สร้างปุ่มตัวเลือกตามลำดับใหม่
+    shuffledIndices.forEach(originalIndex => {
         const button = document.createElement("button");
-        button.textContent = option;
+        button.textContent = question.options[originalIndex];
         button.classList.add("option-button");
-        
-        // แก้ไขส่วนนี้
+
+        // เก็บ index เดิมไว้ใน dataset เพื่อใช้ตรวจสอบคำตอบ
+        button.dataset.originalIndex = originalIndex;
+
+        // สำหรับ desktop
         button.onclick = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            checkAnswer(i, question);
+            checkAnswer(originalIndex, question); // ใช้ index เดิมตรวจสอบ
         };
-        
+
         // สำหรับอุปกรณ์ touch
         button.ontouchstart = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            checkAnswer(i, question);
+            checkAnswer(originalIndex, question);
         };
-        
+
         optionsContainer.appendChild(button);
     });
 
@@ -97,6 +106,16 @@ function loadQuestion(index) {
     nextButton.style.display = 'none';
     // ซ่อน feedback container เมื่อโหลดคำถามใหม่
     document.getElementById('feedback-container').style.display = 'none';
+}
+
+// ฟังก์ชันสุ่มลำดับ array
+function shuffleArray(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
 }
 
 // โหลดโมเดล 3D
@@ -120,79 +139,127 @@ function loadModel(modelPath) {
 }
 
 // ตรวจสอบคำตอบ
-function checkAnswer(selectedIndex, currentQuestion) {
-    const answerButtons = document.querySelectorAll('.option-button');
-    const selectedButton = answerButtons[selectedIndex];
+function checkAnswer(selectedOriginalIndex, currentQuestion) {
+    const answerButtons = Array.from(document.querySelectorAll('.option-button'));
     const feedbackContainer = document.getElementById('feedback-container');
-    
+    const optionsContainer = document.getElementById('options-container');
+
+    // หาปุ่มที่ถูกเลือกโดยใช้ originalIndex
+    const selectedButton = answerButtons.find(
+        btn => parseInt(btn.dataset.originalIndex) === selectedOriginalIndex
+    );
+
     // สลับสถานะการเลือกของปุ่มคำตอบ
     selectedButton.classList.toggle('selected');
-    
+
+    // เก็บ index เดิมของปุ่มที่ถูกเลือกทั้งหมด
+    const selectedOriginalIndices = answerButtons
+        .filter(btn => btn.classList.contains('selected'))
+        .map(btn => parseInt(btn.dataset.originalIndex));
+
     // ตรวจสอบว่าตอบครบทุกข้อที่ถูกต้องหรือไม่
     const allCorrectAnswersSelected = currentQuestion.correctAnswer.every(
-        correctIndex => answerButtons[correctIndex].classList.contains('selected')
+        correctIndex => selectedOriginalIndices.includes(correctIndex)
     );
-    
+
     // ตรวจสอบว่ามีการเลือกคำตอบผิดหรือไม่
-    const hasWrongAnswerSelected = Array.from(answerButtons).some(
-        (button, index) => 
-            button.classList.contains('selected') && 
-            !currentQuestion.correctAnswer.includes(index)
+    const hasWrongAnswerSelected = selectedOriginalIndices.some(
+        selectedIndex => !currentQuestion.correctAnswer.includes(selectedIndex)
     );
-    
-    // Disable all buttons if all correct answers are selected
-    if (allCorrectAnswersSelected || hasWrongAnswerSelected) {
+
+    // ตรวจสอบว่าผู้ใช้เลือกครบจำนวนคำตอบที่ต้องการหรือยัง
+    const hasSelectedEnough = selectedOriginalIndices.length === currentQuestion.correctAnswer.length;
+
+    // แสดง feedback เฉพาะเมื่อเลือกครบจำนวนคำตอบ
+    if (hasSelectedEnough) {
+        // ปิดการใช้งานปุ่มทั้งหมด
+        optionsContainer.classList.add('disabled');
         answerButtons.forEach(button => {
             button.disabled = true;
         });
-        
+
+        // เน้นคำตอบที่ถูกต้อง (ใช้ originalIndex)
+        currentQuestion.correctAnswer.forEach(correctOriginalIndex => {
+            const correctButton = answerButtons.find(
+                btn => parseInt(btn.dataset.originalIndex) === correctOriginalIndex
+            );
+            if (correctButton) {
+                correctButton.classList.add('correct-answer');
+            }
+        });
+
+        // แสดงผล feedback ตามว่าถูกหรือผิด
         if (allCorrectAnswersSelected && !hasWrongAnswerSelected) {
             totalScore += currentQuestion.points;
             feedbackContainer.innerHTML = `
-                <p class="correct-feedback">ถูกต้อง! </p>
+                <p class="correct-feedback">ถูกต้อง!</p>
                 <p class="correct-feedback">${currentQuestion.feedback.correct}</p>
                 <button id="next-button" class="btn">ถัดไป</button>
             `;
-            currentQuestion.correctAnswer.forEach(index => {
-                answerButtons[index].classList.add('correct-answer');
-            });
+
+            // ตั้งค่า event listener สำหรับปุ่มถัดไป (ไปข้อต่อไปปกติ)
+            document.getElementById('next-button').onclick = () => {
+                optionsContainer.classList.remove('disabled');
+                feedbackContainer.style.display = 'none';
+                goToNextQuestion(currentQuestion, false); // ไม่ต้องย้อนกลับ
+            };
+
         } else {
             feedbackContainer.innerHTML = `
-                <p class="incorrect-feedback">ยังไม่ถูกต้อง! </p>
+                <p class="incorrect-feedback">ยังไม่ถูกต้อง!</p>
                 <p class="incorrect-feedback">${currentQuestion.feedback.incorrect}</p>
-                <button id="next-button" class="btn">ถัดไป</button>
+                <button id="next-button" class="btn">ลองอีกครั้ง</button>
             `;
-            Array.from(answerButtons)
-                .filter(button => button.classList.contains('selected'))
-                .forEach(button => button.classList.add('wrong-answer'));
+
+            // เน้นคำตอบที่เลือกผิด
+            selectedOriginalIndices
+                .filter(index => !currentQuestion.correctAnswer.includes(index))
+                .forEach(wrongIndex => {
+                    const wrongButton = answerButtons.find(
+                        btn => parseInt(btn.dataset.originalIndex) === wrongIndex
+                    );
+                    if (wrongButton) {
+                        wrongButton.classList.add('wrong-answer');
+                    }
+                });
+            // ตั้งค่า event listener สำหรับปุ่มถัดไป (ย้อนกลับไปข้อเดิม)
+            document.getElementById('next-button').onclick = () => {
+                optionsContainer.classList.remove('disabled');
+                feedbackContainer.style.display = 'none';
+                goToNextQuestion(currentQuestion, true); // ย้อนกลับไปข้อเดิม
+            };
         }
-        
+
         // แสดง feedback popup
         feedbackContainer.style.display = 'block';
-        
-        // ตั้งค่า event listener สำหรับปุ่มถัดไป
-        document.getElementById('next-button').onclick = () => {
-            feedbackContainer.style.display = 'none';
-            goToNextQuestion(currentQuestion);
-        };
     }
 }
 
-function goToNextQuestion(currentQuestion) {
+function goToNextQuestion(currentQuestion, shouldRetry) {
+    // บันทึกคำตอบปัจจุบัน
     userAnswers.push({
         question: currentQuestion.question,
-        answer: Array.from(optionsContainer.querySelectorAll('.option-button'))
+        answer: Array.from(document.querySelectorAll('.option-button'))
             .filter(button => button.classList.contains('selected'))
             .map(button => button.textContent),
-        timeTaken: Date.now() - questionStartTimes[currentQuestionIndex]
+        timeTaken: Date.now() - questionStartTimes[currentQuestionIndex],
+        isCorrect: !shouldRetry
     });
 
-    if (currentQuestionIndex < quizData.length - 1) {
+    if (shouldRetry) {
+        // ย้อนกลับไปทำข้อเดิมตามที่กำหนดใน onIncorrect
+        currentQuestionIndex = currentQuestion.onIncorrect || currentQuestionIndex;
+    } else if (currentQuestionIndex < quizData.length - 1) {
+        // ไปข้อต่อไปปกติ
         currentQuestionIndex++;
-        loadQuestion(currentQuestionIndex);
     } else {
+        // จบแบบทดสอบ
         endQuiz();
+        return;
     }
+
+    // โหลดคำถามใหม่
+    loadQuestion(currentQuestionIndex);
 }
 
 
@@ -208,7 +275,7 @@ function endQuiz() {
 // บันทึกผลลัพธ์ลง Firebase
 async function saveQuizResults() {
     try {
-        const resultsCollection = collection(db, "quizResults");
+        const resultsCollection = collection(db, "quizBoardResults");
         await addDoc(resultsCollection, {
             userEmail: userEmail,
             answers: userAnswers,
@@ -267,7 +334,7 @@ function setupModelControls() {
     let initialPosition = { x: 0, y: 0, z: -3 }; // ตำแหน่งเริ่มต้น
 
     // ป้องกันการซูมหน้าจอเมื่อมีการ touchmove
-    document.addEventListener('touchmove', function(e) {
+    document.addEventListener('touchmove', function (e) {
         if (isDragging || isPanning || e.touches.length === 2) {
             e.preventDefault();
         }
@@ -443,7 +510,7 @@ function setupModelControls() {
 
 // เริ่มต้นแอป
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("start-button").addEventListener("click", startQuiz);
-  setupModelControls();
+    document.getElementById("start-button").addEventListener("click", startQuiz);
+    setupModelControls();
 });
 

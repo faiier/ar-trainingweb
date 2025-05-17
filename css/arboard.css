@@ -145,6 +145,11 @@
   color: white;
 }
 
+#options-container.disabled {
+  pointer-events: none; /* ปิดการโต้ตอบกับเมาส์/ทัช */
+  opacity: 0.6; /* ทำให้ปุ่มดูจางลงเพื่อแสดงว่าไม่สามารถกดได้ */
+}
+
 
 @media (max-width: 300px) {
   :root {
