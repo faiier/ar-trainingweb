@@ -1,145 +1,176 @@
 <!DOCTYPE html>
 <html lang="th">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Activity</title>
-    <!-- Linking Font Awesome fot icons -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
-    />
-    <link rel="stylesheet" href="../css/style.css" />
-    <link rel="stylesheet" href="../css/activity.css" />
-  </head>
 
-  <body>
-    <!-- Header / Navbar -->
-    <header>
-      <nav class="navbar section-content">
-        <a href="#" class="nav-logo">
-          <h1 class="logo-text">
-            <span class="lt1">Training.</span><span class="lt2">AR</span>
-          </h1>
-        </a>
-        <ul class="nav-menu">
-          <button id="menu-close-button" class="fas fa-times"></button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Activity</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/activity.css" />
+  <style>
+    .activity-link.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
 
-          <li class="nav-item">
-            <a href="../index.html" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item">
-            <a href="#activity" class="nav-link">Activity</a>
-          </li>
-          <li class="nav-item">
-            <a href="#contact" class="nav-link">Contact</a>
-          </li>
-        </ul>
+    .activity-status.pending::before {
+      content: '(กรุณาทำแบบประเมินก่อนฝึกอบรม)';
+      color: red;
+      font-style: italic;
+      margin-left: 0.5em;
+    }
+  </style>
+</head>
 
-        <button id="menu-open-button" class="fas fa-bars"></button>
-      </nav>
-    </header>
+<body>
+  <header>
+    <nav class="navbar section-content">
+      <a href="#" class="nav-logo">
+        <h1 class="logo-text">
+          <span class="lt1">Training.</span><span class="lt2">AR</span>
+        </h1>
+      </a>
+      <ul class="nav-menu">
+        <button id="menu-close-button" class="fas fa-times"></button>
 
-    <main>
-      <!-- Skill section -->
-      <section class="skill-section">
-        <div class="section-content">
-          <div class="skill-details">
-            <h2 class="title">ทักษะการปฏิบัติงานในแผนกหล่อ</h2>
-            <ul class="skill-info-list">
-              <li class="skill-info">
-                <i class="fa-solid fa-circle"></i>
-                <p>ทักษะการอ่านแผนการผลิตประจำวัน</p>
-              </li>
-              <li class="skill-info">
-                <i class="fa-solid fa-circle"></i>
-                <p>ทักษะการตรวจสอบล้อหลังหล่อ</p>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
+        <li class="nav-item">
+          <a href="../index.html" class="nav-link">Home</a>
+        </li>
+        <li class="nav-item">
+          <a href="#activity" class="nav-link">Activity</a>
+        </li>
+        <li class="nav-item">
+          <a href="#contact" class="nav-link">Contact</a>
+        </li>
+      </ul>
 
-      <!-- Activity section -->
-      <section class="activity-section">
-        <h2 class="title">กิจกรรม</h2>
-        <div class="section-activity">
-          <div class="activity-details">
-            <ul class="activity-list">
-              <a href="../screen/pretest.html" class="activity-link">
-                <li class="activity">
-                  <h4 class="activity-title">
-                    แบบประเมินทักษะการปฏิบัติงานก่อนฝึกอบรม
-                  </h4>
-                  <p class="activity-info">
-                    <span class="activity-subtitle"
-                      >(คะแนนไม่มีผลกับการประเมินทักษะ)</span
-                    >
-                    <span class="activity-status">เริ่ม</span>
-                  </p>
-                </li>
-              </a>
-              <a href="../screen/arboard.html" class="activity-link">
-                <li class="activity">
-                  <h4 class="activity-title">ทักษะการอ่านแผนการผลิตประจำวัน</h4>
-                  <p class="activity-info">
-                    <span class="activity-subtitle">5 ฉากสถานการณ์</span>
-                    <span class="activity-status"></span>
-                  </p>
-                </li>
-              </a>
-              <a href="../screen/arwheel.html" class="activity-link">
-                <li class="activity">
-                  <h4 class="activity-title">ทักษะการตรวจสอบล้อหลังหล่อ</h4>
-                  <p class="activity-info">
-                    <span class="activity-subtitle">20 ฉากสถานการณ์</span>
-                    <span class="activity-status"></span>
-                  </p>
-                </li>
-              </a>
-              <a href="../screen/posttest.html" class="activity-link">
-                <li class="activity">
-                  <h4 class="activity-title">
-                    แบบประเมินทักษะการปฏิบัติงานหลังฝึกอบรม
-                  </h4>
-                  <p class="activity-info">
-                    <span class="activity-subtitle"
-                      >คะแนนมีผลกับการประเมินทักษะ</span
-                    >
-                    <span class="activity-status"></span>
-                  </p>
-                </li>
-              </a>
-            </ul>
-          </div>
-        </div>
-      </section>
+      <button id="menu-open-button" class="fas fa-bars"></button>
+    </nav>
+  </header>
 
-      <!-- Contact section -->
-      <section class="contact-section" id="contact">
-        <h2 class="section-title">Contact US</h2>
-        <div class="section-content">
-          <ul class="contact-info-list">
-            <li class="contact-info">
-              <i class="fa-regular fa-envelope"></i>
-              <p>faiithataiam@gmail.com</p>
+  <main>
+    <section class="skill-section">
+      <div class="section-content">
+        <div class="skill-details">
+          <h2 class="title">ทักษะการปฏิบัติงานในแผนกหล่อ</h2>
+          <ul class="skill-info-list">
+            <li class="skill-info">
+              <i class="fa-solid fa-circle"></i>
+              <p>ทักษะการอ่านแผนการผลิตประจำวัน</p>
             </li>
-            <li class="contact-info">
-              <i class="fa-regular fa-envelope"></i>
-              <p>kenika.thata@kmutt.ac.th</p>
+            <li class="skill-info">
+              <i class="fa-solid fa-circle"></i>
+              <p>ทักษะการตรวจสอบล้อหลังหล่อ</p>
             </li>
           </ul>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <!-- Footer section -->
-      <footer class="footer-section">
-        <div class="section-content">
-          <p class="copyright-text">&copy; 2025 Training.AR</p>
+    <section class="activity-section">
+      <h2 class="title">กิจกรรม</h2>
+      <div class="section-activity">
+        <div class="activity-details">
+          <ul class="activity-list">
+            <a href="../screen/pretest.html" class="activity-link" id="pretestLink">
+              <li class="activity">
+                <h4 class="activity-title">
+                  แบบประเมินทักษะการปฏิบัติงานก่อนฝึกอบรม
+                </h4>
+                <p class="activity-info">
+                  <span class="activity-subtitle">(คะแนนไม่มีผลกับการประเมินทักษะ)</span>
+                  <span class="activity-status"></span>
+                </p>
+              </li>
+            </a>
+            <a href="../screen/arboard.html" class="activity-link" id="arboardLink">
+              <li class="activity">
+                <h4 class="activity-title">อบรมทักษะการปฏิบัติงาน</h4>
+                <p class="activity-info">
+                  <span class="activity-subtitle">20 ฉากสถานการณ์</span>
+                  <span class="activity-status" id="arboardStatus"></span>
+                </p>
+              </li>
+            </a>
+          </ul>
         </div>
-      </footer>
-    </main>
+      </div>
+    </section>
 
-    <script src="../js/script.js"></script>
-  </body>
+    <section class="contact-section" id="contact">
+      <h2 class="section-title">Contact US</h2>
+      <div class="section-content">
+        <ul class="contact-info-list">
+          <li class="contact-info">
+            <i class="fa-regular fa-envelope"></i>
+            <p>faiithataiam@gmail.com</p>
+          </li>
+          <li class="contact-info">
+            <i class="fa-regular fa-envelope"></i>
+            <p>kenika.thata@kmutt.ac.th</p>
+          </li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="footer-section">
+      <div class="section-content">
+        <p class="copyright-text">&copy; 2025 Training.AR</p>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const pretestLink = document.getElementById('pretestLink');
+      const arboardLink = document.getElementById('arboardLink');
+      const arboardStatus = document.getElementById('arboardStatus');
+      const hasDonePretest = localStorage.getItem('hasDonePretest');
+
+      function disableArboard() {
+        arboardLink.classList.add('disabled');
+        arboardStatus.classList.add('pending');
+      }
+
+      function enableArboard() {
+        arboardLink.classList.remove('disabled');
+        arboardStatus.classList.remove('pending');
+      }
+
+      if (hasDonePretest === 'true') {
+        enableArboard();
+      } else {
+        disableArboard();
+      }
+
+      // Optional: Prevent navigation on disabled link
+      arboardLink.addEventListener('click', function(event) {
+        if (this.classList.contains('disabled')) {
+          event.preventDefault();
+        }
+      });
+
+      // Listen for changes in localStorage (in case pretest is done in another tab)
+      window.addEventListener('storage', function(event) {
+        if (event.key === 'hasDonePretest' && event.newValue === 'true') {
+          enableArboard();
+        }
+      });
+
+      // Listen for focus event to re-check status when returning to the page
+      window.addEventListener('focus', function() {
+        const currentHasDonePretest = localStorage.getItem('hasDonePretest');
+        if (currentHasDonePretest === 'true') {
+          enableArboard();
+        } else {
+          disableArboard();
+        }
+      });
+    });
+  </script>
+  <script src="../js/script.js"></script>
+</body>
+
 </html>

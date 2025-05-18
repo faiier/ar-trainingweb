@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>แบบทดสอบ AR</title>
+    <title>AR Wheel</title>
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js"></script>
@@ -11,6 +11,7 @@
     <script src="https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js"></script>
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/arboard.css" />
+    <link rel="stylesheet" href="../css/ar_wheel.css" />
     <style>
         /* เพิ่มในส่วน head */
         a-scene {
@@ -36,18 +37,15 @@
             arjs-camera="fov: 60; near: 0.1; far: 100;"></a-entity>
 
         <a-entity id="ar-content" visible="false">
-            <a-entity id="model-container" position="0 0.2 -3" scale="0.2 0.2 0.2"></a-entity>
+            <a-entity id="model-container" position="0 0.2 -3" scale="0.3 0.3 0.3"></a-entity>
         </a-entity>
 
         <div id="start-screen" class="screen-home">
             <div class="title">
-                <h1>ทักษะการอ่านแผนการผลิตประจำวัน</h1>
+                <h1>ทักษะการตรวจสอบล้อหลังหล่อ</h1>
                 <h2>สถานการณ์หลัก</h2>
                 <p>
-                    หัวหน้างานแจ้งให้พนักงานทุกคนตรวจสอบแผนการผลิตของเครื่องหล่อที่ตนรับผิดชอบ
-                    คุณกำลังอ่านกระดานแผนการผลิตประจำวัน ซึ่งแสดงข้อมูล ได้แก่
-                    ชื่อเครื่องหล่อ ชื่อรุ่นงาน จำนวนที่ต้องหล่อในแต่ละชั่วโมง และจำนวน
-                    Lot size เป้าหมายการผลิตรวมทั้งวัน
+                    คุณกำลังตรวจสอบล้อหลังหล่อ เพื่อตรวจสอบคุณภาพของล้อก่อนส่งเข้าระบบว่าผ่านเกณฑ์ตามมาตรฐานที่กำหนดไว้หรือไม่
                 </p>
             </div>
             <button id="start-button" class="btn">เริ่ม</button>
@@ -58,8 +56,8 @@
                 <h2 id="question-text"></h2>
                 <div id="options-container"></div>
                 <div id="controls-info">
-                    <p>ใช้นิ้วเดียวลากเพื่อหมุนโมเดล ใช้นิ้วสองนิ้วเพื่อย่อ/ขยายโมเดล และใช้นิ้วสามนิ้วลากเพื่อเลื่อนโมเดล</p>
-                 
+                    <p>ใช้ 1 นิ้วลากเพื่อหมุนโมเดล ใช้ 2 นิ้วเพื่อย่อ/ขยายโมเดล</p>
+                    <p>และใช้ 3 นิ้วลากเพื่อเลื่อนโมเดล</p>
                 </div>
             </div>
         </div>
@@ -68,7 +66,7 @@
         
     </a-scene>
 
-    <script type="module" src="../js/arboard.js"></script>
+    <script type="module" src="../js/ar_wheel.js"></script>
 </body>
 
 </html>

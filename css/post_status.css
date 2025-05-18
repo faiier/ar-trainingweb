@@ -1,0 +1,104 @@
+:root {
+    /* Colors */
+    --white-color: #fff;
+    --dark-color: #252525;
+    --primary-color: #231f20;
+    --secondary--color: #ed1c24;
+    --gray--color: #ebebeb;
+
+    /* Font size */
+    --font-size-s: 0.9rem;
+    --font-size-n: 1rem;
+    --font-size-m: 1.12rem;
+    --font-size-l: 1.5rem;
+    --font-size-xl: 2rem;
+    --font-size-xxl: 2.3rem;
+
+    /* Font weight */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+
+    /* Border radius */
+    --border-radius-s: 8px;
+    --border-radius-m: 15px;
+    --border-radius-l: 30px;
+
+    /* Site max width */
+    --site-max-width: 1300px;
+}
+
+.status-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100vh;
+}
+
+img {
+    max-width: fit-content;
+}
+
+.status-section .pass-status {
+    padding: 40px;
+    text-align: center;
+}
+
+.status-section .pass-status h1 {
+    color: #2e7d32;
+    margin-bottom: 10px;
+}
+
+.status-section .pass-status h3 {
+    color: #2e7d32;
+    margin-bottom: 20px;
+}
+
+.score-display {
+    color: black;
+    padding: 10px;
+    width: 80%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.status-section .pass-status .btn-pass {
+    margin-top: 30px;
+    background: var(--secondary--color);
+    border-radius: var(--border-radius-l);
+    height: 40px;
+    width: 70vw;
+    font-size: var(--font-size-m);
+    font-weight: var(--font-weight-semibold);
+    color: var(--white-color);
+}
+
+.status-section .fail-status {
+    padding: 40px;
+    text-align: center;
+}
+
+.status-section .fail-status h1 {
+    color: var(--secondary--color);
+    margin-bottom: 10px;
+}
+
+.status-section .fail-status h3 {
+    color: var(--secondary--color);
+    margin-bottom: 20px;
+}
+
+.status-section .fail-status .btn-fail {
+    margin-top: 30px;
+    background: black;
+    border-radius: var(--border-radius-l);
+    height: 40px;
+    width: 70vw;
+    font-size: var(--font-size-m);
+    font-weight: var(--font-weight-semibold);
+    color: var(--white-color);
+}

@@ -115,30 +115,31 @@ function endQuiz() {
     calculateScore();
     loadingSpinner.style.display = 'block'; // แสดงโหลด‑ดิง
     saveResultToFirebase()
-    .then(() => {
-      // บันทึกเสร็จแล้ว
-      localStorage.setItem('hasDonePretest', 'true');
-      window.location.href = '../screen/activity.html';
-    })
-    .finally(() => {
-      // ซ่อนโหลดดิงไม่ว่าจะสำเร็จหรือเกิด error
-      loadingSpinner.style.display = 'none';
-    });
+        .then(() => {
+            // บันทึกเสร็จแล้ว
+            window.location.href = `../screen/post_status.html?score=${score}&total=${questions.length}`;
+        })
+        .finally(() => {
+            // ซ่อนโหลดดิงไม่ว่าจะสำเร็จหรือเกิด error
+            loadingSpinner.style.display = 'none';
+        });
 
 }
 
 function calculateScore() {
     console.log('calculateScore called');
+    score = 0; // อย่าลืมรีเซ็ตคะแนนก่อนคำนวณใหม่
     questions.forEach((question, index) => {
         if (userAnswers[index] === question.answer) {
             score++;
         }
     });
+    console.log('คะแนนที่ได้:', score); // ตรวจสอบคะแนน
 }
 
 async function saveResultToFirebase() {
     try {
-        const resultsCollection = collection(db, 'pretestResults');
+        const resultsCollection = collection(db, 'PostTestResults');
         await addDoc(resultsCollection, {
             email: userEmail,
             answers: userAnswers,

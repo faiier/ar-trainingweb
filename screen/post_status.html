@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Post-Test Status</title>
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/post_status.css" />
+</head>
+
+<body>
+    <section class="status-section">
+        <div id="pass-screen" class="pass-status" style="display: none;">
+            <img src="../assets/images/success.png" alt="">
+            <h1>ยินดีด้วย</h1>
+            <h3>คุณผ่านการประเมินทักษะการปฏิบัติงาน</h3>
+            <div id="score-pass"></div>
+            <button class="btn-pass">แบบสอบถามความคิดเห็น</button>
+        </div>
+
+        <div id="fail-screen" class="fail-status" style="display: none;">
+            <img src="../assets/images/fail.png" alt="">
+            <h1>เสียใจด้วย</h1>
+            <h3>คุณไม่ผ่านการประเมินทักษะการปฏิบัติงาน</h3>
+            <div id="score-fail"></div>
+            <button class="btn-fail">ถัดไป</button>
+        </div>
+    </section>
+
+    <script>
+        // รับค่าคะแนนจาก URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const score = urlParams.get('score');
+        const totalQuestions = urlParams.get('total') || 26; // จำนวนคำถามทั้งหมด
+        
+        // แสดงผลตามคะแนน
+        if (score >= 22) {
+            document.getElementById('pass-screen').style.display = 'block';
+            document.getElementById('score-pass').innerHTML = `คะแนนที่ได้: ${score} / ${totalQuestions}`;
+        } else {
+            document.getElementById('fail-screen').style.display = 'block';
+            document.getElementById('score-fail').innerHTML = `คะแนนที่ได้: ${score} / ${totalQuestions}`;
+        }
+
+        // จัดการกับปุ่ม
+        document.querySelector('.btn-pass').addEventListener('click', () => {
+            // เปิดลิงก์ Google Form ในแท็บใหม่
+            window.open('https://forms.gle/ZWocxVJDcQRf4Z3Y9', '_blank');
+        });
+
+        document.querySelector('.btn-fail').addEventListener('click', () => {
+            window.location.href = '../screen/arboard.html'; // เปลี่ยนเป็นหน้าถัดไปที่ต้องการ
+        });
+    </script>
+</body>
+
+</html>

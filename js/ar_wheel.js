@@ -1,7 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.7.1/firebase-auth.js";
-import { quizData } from '../js/quiz_board.js'; // Import quizData
+import { quizData } from '../js/quiz_wheel.js'; // Import quizData
 
 // Firebase configuration
 const firebaseConfig = {
@@ -119,18 +119,28 @@ function shuffleArray(array) {
 }
 
 // โหลดโมเดล 3D
+// โหลดโมเดล 3D
 function loadModel(modelPath) {
     const modelContainer = document.getElementById("model-container");
+    const currentQuestion = quizData[currentQuestionIndex];
 
     // ลบโมเดลเก่า
     if (modelEntity) {
         modelContainer.removeChild(modelEntity);
     }
 
+    // ตั้งค่า position และ scale จาก quizData (ถ้ามี) หรือใช้ค่า default
+    const position = currentQuestion.position || "0 0.2 -3";
+    const scale = currentQuestion.scale || "0.3 0.3 0.3";
+
+    // อัปเดต model-container ตามค่าจาก quizData
+    modelContainer.setAttribute("position", position);
+    modelContainer.setAttribute("scale", scale);
+
     // สร้างโมเดลใหม่
     modelEntity = document.createElement("a-entity");
     modelEntity.setAttribute("gltf-model", `url(${modelPath})`);
-    modelEntity.setAttribute("scale", "0.3 0.3 0.3");
+    modelEntity.setAttribute("scale", scale); // ใช้ scale 1 1 1 และให้ model-container ควบคุมขนาดหลัก
     modelEntity.setAttribute("data-base-scale", "1");
 
     modelContainer.appendChild(modelEntity);
@@ -269,13 +279,13 @@ function endQuiz() {
     quizScreen.style.display = "none";
     arContent.setAttribute("visible", "false");
     saveQuizResults();
-    window.location.href = '../screen/ar_wheel.html';
+    window.location.href = '../screen/ar_status.html';
 }
 
 // บันทึกผลลัพธ์ลง Firebase
 async function saveQuizResults() {
     try {
-        const resultsCollection = collection(db, "quizBoardResults");
+        const resultsCollection = collection(db, "quizWheelResults");
         await addDoc(resultsCollection, {
             userEmail: userEmail,
             answers: userAnswers,
