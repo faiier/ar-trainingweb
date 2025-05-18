@@ -269,7 +269,7 @@ function endQuiz() {
     quizScreen.style.display = "none";
     arContent.setAttribute("visible", "false");
     saveQuizResults();
-    window.location.href = '../screen/ar_wheel.html';
+    
 }
 
 // บันทึกผลลัพธ์ลง Firebase
@@ -284,7 +284,7 @@ async function saveQuizResults() {
             questionHistory: quizData.map(q => q.question),
             createdAt: new Date()
         });
-        alert("บันทึกผลสำเร็จ!");
+        window.location.href = '../screen/ar_wheel.html';
     } catch (error) {
         console.error("Error saving quiz results:", error);
         alert("เกิดข้อผิดพลาดในการบันทึกผลลัพธ์");
