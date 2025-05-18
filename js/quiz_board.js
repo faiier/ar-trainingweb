@@ -41,8 +41,8 @@ export const quizData = [
     // No. 4 index = 3
     {
         question: "คุณต้องหล่อล้อรุ่น CCD2500-59 ที่เครื่องหล่อใด และต้องผลิตล้อให้ได้กี่วงใน 1 วัน",
-        options: ["CS #25", "CCD2500-59", "(71)", "7", "1"],
-        correctAnswer: [0, 2],
+        options: ["CS #25", "(71)", "7", "1"],
+        correctAnswer: [0, 1],
         model: "../assets/models/b2.glb",
         points: 1,
         feedback: {
@@ -54,8 +54,8 @@ export const quizData = [
     // No. 5 index = 4
     {
         question: "ในกะเช้า คุณต้องหล่อล้อให้ได้กี่วงในแต่ละชั่วโมง",
-        options: ["CS #25", "CCD2500-59", "(71)", "7", "1"],
-        correctAnswer: [3],
+        options: ["CS #25", "(71)", "7", "1"],
+        correctAnswer: [2],
         model: "../assets/models/b2.glb",
         points: 1,
         feedback: {
