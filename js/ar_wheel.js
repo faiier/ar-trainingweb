@@ -119,7 +119,6 @@ function shuffleArray(array) {
 }
 
 // โหลดโมเดล 3D
-// โหลดโมเดล 3D
 function loadModel(modelPath) {
     const modelContainer = document.getElementById("model-container");
     const currentQuestion = quizData[currentQuestionIndex];

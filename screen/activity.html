@@ -1,176 +1,349 @@
 <!DOCTYPE html>
 <html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Activity</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link rel="stylesheet" href="../css/activity.css" />
+    <style>
+      .activity-link.disabled {
+        pointer-events: none;
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Activity</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-  <link rel="stylesheet" href="../css/style.css" />
-  <link rel="stylesheet" href="../css/activity.css" />
-  <style>
-    .activity-link.disabled {
-      pointer-events: none;
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+      .activity-status.pending::before {
+        content: "(กรุณาทำแบบประเมินก่อนฝึกอบรม)";
+        color: red;
+        font-style: italic;
+        margin-left: 0.5em;
+      }
 
-    .activity-status.pending::before {
-      content: '(กรุณาทำแบบประเมินก่อนฝึกอบรม)';
-      color: red;
-      font-style: italic;
-      margin-left: 0.5em;
-    }
-  </style>
-</head>
+      .activity-status.not-trained::before {
+        content: "(ต้องฝึกอบรมก่อนประเมินทุกครั้ง)";
+        color: red;
+        font-style: italic;
+        margin-left: 0.5em;
+      }
 
-<body>
-  <header>
-    <nav class="navbar section-content">
-      <a href="#" class="nav-logo">
-        <h1 class="logo-text">
-          <span class="lt1">Training.</span><span class="lt2">AR</span>
-        </h1>
-      </a>
-      <ul class="nav-menu">
-        <button id="menu-close-button" class="fas fa-times"></button>
+      .activity-status.passed::before {
+        content: "ผ่านการประเมิน";
+        color: #2e7d32;
+        font-weight: bold;
+        margin-left: 0.5em;
+      }
 
-        <li class="nav-item">
-          <a href="../index.html" class="nav-link">Home</a>
-        </li>
-        <li class="nav-item">
-          <a href="#activity" class="nav-link">Activity</a>
-        </li>
-        <li class="nav-item">
-          <a href="#contact" class="nav-link">Contact</a>
-        </li>
-      </ul>
+      .activity-status.failed::before {
+        content: "ไม่ผ่าน (กรุณาฝึกอบรมอีกครั้ง)";
+        color: red;
+        margin-left: 0.5em;
+      }
 
-      <button id="menu-open-button" class="fas fa-bars"></button>
-    </nav>
-  </header>
+      .activity-status.completed::before {
+        content: "ทำแบบประเมินแล้ว";
+        color: green;
+        font-style: italic;
+        margin-left: 0.5em;
+      }
+    </style>
 
-  <main>
-    <section class="skill-section">
-      <div class="section-content">
-        <div class="skill-details">
-          <h2 class="title">ทักษะการปฏิบัติงานในแผนกหล่อ</h2>
-          <ul class="skill-info-list">
-            <li class="skill-info">
-              <i class="fa-solid fa-circle"></i>
-              <p>ทักษะการอ่านแผนการผลิตประจำวัน</p>
-            </li>
-            <li class="skill-info">
-              <i class="fa-solid fa-circle"></i>
-              <p>ทักษะการตรวจสอบล้อหลังหล่อ</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-    <section class="activity-section">
-      <h2 class="title">กิจกรรม</h2>
-      <div class="section-activity">
-        <div class="activity-details">
-          <ul class="activity-list">
-            <a href="../screen/pretest.html" class="activity-link" id="pretestLink">
-              <li class="activity">
-                <h4 class="activity-title">
-                  แบบประเมินทักษะการปฏิบัติงานก่อนฝึกอบรม
-                </h4>
-                <p class="activity-info">
-                  <span class="activity-subtitle">(คะแนนไม่มีผลกับการประเมินทักษะ)</span>
-                  <span class="activity-status"></span>
-                </p>
-              </li>
-            </a>
-            <a href="../screen/arboard.html" class="activity-link" id="arboardLink">
-              <li class="activity">
-                <h4 class="activity-title">อบรมทักษะการปฏิบัติงาน</h4>
-                <p class="activity-info">
-                  <span class="activity-subtitle">20 ฉากสถานการณ์</span>
-                  <span class="activity-status" id="arboardStatus"></span>
-                </p>
-              </li>
-            </a>
-          </ul>
-        </div>
-      </div>
-    </section>
+    <script>
+      // Firebase Configuration (Replace with your actual config)
+      const firebaseConfig = {
+        apiKey: "AIzaSyAYfflCmM5bY7qN5nEzsxTjFvqyeJcdDi8",
+        authDomain: "ar-training-5ca85.firebaseapp.com",
+        projectId: "ar-training-5ca85",
+        storageBucket: "ar-training-5ca85.firebasestorage.app",
+        messagingSenderId: "1080713203735",
+        appId: "1:1080713203735:web:c381638a18571a065e4c52",
+      };
 
-    <section class="contact-section" id="contact">
-      <h2 class="section-title">Contact US</h2>
-      <div class="section-content">
-        <ul class="contact-info-list">
-          <li class="contact-info">
-            <i class="fa-regular fa-envelope"></i>
-            <p>faiithataiam@gmail.com</p>
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+  </head>
+
+  <body>
+    <header>
+      <nav class="navbar section-content">
+        <a href="#" class="nav-logo">
+          <h1 class="logo-text">
+            <span class="lt1">Training.</span><span class="lt2">AR</span>
+          </h1>
+        </a>
+        <ul class="nav-menu">
+          <button id="menu-close-button" class="fas fa-times"></button>
+          
+          <li class="nav-item">
+            <a href="#activity" class="nav-link">Home</a>
           </li>
-          <li class="contact-info">
-            <i class="fa-regular fa-envelope"></i>
-            <p>kenika.thata@kmutt.ac.th</p>
+          <li class="nav-item">
+            <a href="#contact" class="nav-link">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" id="logoutLink">Log out</a>
           </li>
         </ul>
-      </div>
-    </section>
 
-    <footer class="footer-section">
-      <div class="section-content">
-        <p class="copyright-text">&copy; 2025 Training.AR</p>
-      </div>
-    </footer>
-  </main>
+        <button id="menu-open-button" class="fas fa-bars"></button>
+      </nav>
+    </header>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      const pretestLink = document.getElementById('pretestLink');
-      const arboardLink = document.getElementById('arboardLink');
-      const arboardStatus = document.getElementById('arboardStatus');
-      const hasDonePretest = localStorage.getItem('hasDonePretest');
+    <main>
+      <section class="skill-section">
+        <div class="section-content">
+          <div class="skill-details">
+            <h2 class="title">ทักษะการปฏิบัติงานในแผนกหล่อ</h2>
+            <ul class="skill-info-list">
+              <li class="skill-info">
+                <i class="fa-solid fa-circle"></i>
+                <p>ทักษะการอ่านแผนการผลิตประจำวัน</p>
+              </li>
+              <li class="skill-info">
+                <i class="fa-solid fa-circle"></i>
+                <p>ทักษะการตรวจสอบล้อหลังหล่อ</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-      function disableArboard() {
-        arboardLink.classList.add('disabled');
-        arboardStatus.classList.add('pending');
-      }
+      <section class="activity-section">
+        <h2 class="title">กิจกรรม</h2>
+        <div class="section-activity">
+          <div class="activity-details">
+            <ul class="activity-list">
+              <a
+                href="../screen/pretest.html"
+                class="activity-link"
+                id="pretestLink"
+              >
+                <li class="activity">
+                  <h4 class="activity-title">
+                    แบบประเมินทักษะการปฏิบัติงานก่อนฝึกอบรม
+                  </h4>
+                  <p class="activity-info">
+                    <span class="activity-subtitle"
+                      >คะแนนไม่มีผลกับการประเมิน</span
+                    >
+                    <span class="activity-status" id="pretestStatus"></span>
+                  </p>
+                </li>
+              </a>
+              <a
+                href="../screen/arboard.html"
+                class="activity-link"
+                id="arboardLink"
+              >
+                <li class="activity">
+                  <h4 class="activity-title">อบรมทักษะการปฏิบัติงาน</h4>
+                  <p class="activity-info">
+                    <span class="activity-subtitle">20 ฉากสถานการณ์</span>
+                    <span class="activity-status" id="arboardStatus"></span>
+                  </p>
+                </li>
+              </a>
+              <div class="activity-link" id="postTestLink">
+                <li class="activity">
+                  <h4 class="activity-title">
+                    แบบประเมินทักษะการปฏิบัติงานหลังฝึกอบรม
+                  </h4>
+                  <p class="activity-info">
+                    <span class="activity-subtitle"
+                      >คะแนนมีผลกับการประเมิน</span
+                    >
+                    <span class="activity-status" id="postTestStatus"></span>
+                  </p>
+                </li>
+              </div>
+            </ul>
+          </div>
+        </div>
+      </section>
 
-      function enableArboard() {
-        arboardLink.classList.remove('disabled');
-        arboardStatus.classList.remove('pending');
-      }
+      <section class="contact-section" id="contact">
+        <h2 class="section-title">Contact US</h2>
+        <div class="section-content">
+          <ul class="contact-info-list">
+            <li class="contact-info">
+              <i class="fa-regular fa-envelope"></i>
+              <p>faiithataiam@gmail.com</p>
+            </li>
+            <li class="contact-info">
+              <i class="fa-regular fa-envelope"></i>
+              <p>kenika.thata@kmutt.ac.th</p>
+            </li>
+          </ul>
+        </div>
+      </section>
 
-      if (hasDonePretest === 'true') {
-        enableArboard();
-      } else {
-        disableArboard();
-      }
+      <footer class="footer-section">
+        <div class="section-content">
+          <p class="copyright-text">&copy; 2025 Training.AR</p>
+        </div>
+      </footer>
+    </main>
 
-      // Optional: Prevent navigation on disabled link
-      arboardLink.addEventListener('click', function(event) {
-        if (this.classList.contains('disabled')) {
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const pretestLink = document.getElementById("pretestLink");
+        const pretestStatus = document.getElementById("pretestStatus");
+        const arboardLink = document.getElementById("arboardLink");
+        const arboardStatus = document.getElementById("arboardStatus");
+        const postTestLink = document.getElementById("postTestLink");
+        const postTestStatus = document.getElementById("postTestStatus");
+
+        const logoutLink = document.getElementById("logoutLink");
+
+        logoutLink.addEventListener("click", function (event) {
+          event.preventDefault(); // Prevent the default link behavior (e.g., navigating to "#logout")
+
+          firebase
+            .auth()
+            .signOut()
+            .then(function () {
+              // Sign-out successful.
+              console.log("User signed out");
+              window.location.href = "../index.html"; // Replace with your login page URL
+            })
+            .catch(function (error) {
+              // An error happened.
+              console.error("Error signing out:", error);
+              alert("เกิดข้อผิดพลาดในการออกจากระบบ"); // แสดงข้อความ error ให้ผู้ใช้ (ปรับแต่งตามต้องการ)
+            });
+        });
+
+        function disableLink(linkElement) {
+          linkElement.classList.add("disabled");
+        }
+
+        function enableLink(linkElement) {
+          linkElement.classList.remove("disabled");
+        }
+
+        function clearStatus(statusElement) {
+          statusElement.classList.remove("pending");
+          statusElement.classList.remove("not-trained");
+          statusElement.classList.remove("passed");
+          statusElement.classList.remove("failed");
+          statusElement.classList.remove("completed");
+        }
+
+        function checkIfUserHasPretestResult(userEmail) {
+          return firebase
+            .firestore()
+            .collection("pretestResults")
+            .where("email", "==", userEmail) // *** Ensure 'email' matches your field name ***
+            .get()
+            .then((snapshot) => {
+              return !snapshot.empty;
+            })
+            .catch((error) => {
+              console.error("Error checking pretest results:", error);
+              return false;
+            });
+        }
+
+        function getPostTestResult(userEmail) {
+          return firebase
+            .firestore()
+            .collection("PostTestResults")
+            .where("email", "==", userEmail) // *** Ensure 'email' matches your field name ***
+            .get()
+            .then((snapshot) => {
+              if (snapshot.empty) {
+                return null; // No result found
+              } else {
+                // Assuming only one result per user
+                const data = snapshot.docs[0].data();
+                return {
+                  totalScore: data.totalScore, // *** Ensure 'totalScore' matches your field name ***
+                };
+              }
+            })
+            .catch((error) => {
+              console.error("Error getting post-test results:", error);
+              return null; // Handle error appropriately
+            });
+        }
+
+        firebase.auth().onAuthStateChanged(function (user) {
+          if (user) {
+            const userEmail = user.email;
+            console.log("Current User Email:", userEmail); // Pretest Logic
+
+            checkIfUserHasPretestResult(userEmail).then((hasPretest) => {
+              console.log("Has Pretest Result:", hasPretest);
+              clearStatus(pretestStatus);
+              if (hasPretest) {
+                pretestStatus.classList.add("completed"); // ไม่ต้อง disable pretestLink
+                enableLink(arboardLink);
+              } else {
+                disableLink(arboardLink);
+                pretestStatus.classList.add("pending");
+              }
+            }); // Arboard Link (Enabled only after pretest)
+
+            arboardLink.addEventListener("click", function (event) {
+              if (this.classList.contains("disabled")) {
+                event.preventDefault();
+              }
+            }); // Post-test Logic
+
+            getPostTestResult(userEmail).then((result) => {
+              console.log("Post Test Result:", result); // Log the result
+              disableLink(postTestLink);
+
+              if (!result) {
+                clearStatus(postTestStatus);
+                postTestStatus.classList.add("not-trained");
+                console.log("Status set to: not-trained"); // Log the status
+              } else {
+                clearStatus(postTestStatus);
+                console.log("Total Score:", result.totalScore); // Log the score
+                if (result.totalScore >= 22) {
+                  postTestStatus.classList.add("passed");
+                  console.log("Status set to: passed"); // Log the status
+                } else {
+                  postTestStatus.classList.add("failed");
+                  console.log("Status set to: failed"); // Log the status
+                }
+              }
+            });
+          } else {
+            disableLink(pretestLink);
+            disableLink(arboardLink);
+            disableLink(postTestLink);
+            clearStatus(pretestStatus);
+            pretestStatus.classList.add("pending");
+            clearStatus(arboardStatus);
+            arboardStatus.classList.add("pending");
+            clearStatus(postTestStatus);
+            postTestStatus.classList.add("not-trained");
+            console.warn("No user is signed in."); // Optionally, redirect to login: // window.location.href = "/login.html";
+          }
+        }); // Prevent navigation on disabled pretest link (though it's an anchor now)
+
+        pretestLink.addEventListener("click", function (event) {
+          if (this.classList.contains("disabled")) {
+            event.preventDefault();
+          }
+        }); // Prevent navigation on disabled postTestLink
+
+        postTestLink.addEventListener("click", function (event) {
           event.preventDefault();
-        }
+        });
       });
-
-      // Listen for changes in localStorage (in case pretest is done in another tab)
-      window.addEventListener('storage', function(event) {
-        if (event.key === 'hasDonePretest' && event.newValue === 'true') {
-          enableArboard();
-        }
-      });
-
-      // Listen for focus event to re-check status when returning to the page
-      window.addEventListener('focus', function() {
-        const currentHasDonePretest = localStorage.getItem('hasDonePretest');
-        if (currentHasDonePretest === 'true') {
-          enableArboard();
-        } else {
-          disableArboard();
-        }
-      });
-    });
-  </script>
-  <script src="../js/script.js"></script>
-</body>
-
+    </script>
+    <script src="../js/script.js"></script>
+  </body>
 </html>
