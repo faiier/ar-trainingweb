@@ -84,6 +84,10 @@
   margin: 20px;
 }
 
+.screen-home .descrip {
+  margin: 20px;
+}
+
 .btn {
   background: var(--secondary--color);
   color: white;
