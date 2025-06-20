@@ -26,25 +26,25 @@ export const questions = [
   {
     text: "จากตารางแผนการผลิต ข้อใดคือชื่อเครื่องหล่อ",
     image: "../assets/images/5.png",
-    options: ["CS #16", "LED1050", "(60)", "4"],
+    options: ["CS #16", "LED1050-90", "(60)", "4"],
     answer: "CS #16",
   },
   {
     text: "จากตารางแผนการผลิต ข้อใดคือชื่อรุ่นงาน",
     image: "../assets/images/5.png",
-    options: ["CS #16", "LED1050", "(60)", "4"],
+    options: ["CS #16", "LED1050-90", "(60)", "4"],
     answer: "LED1050",
   },
   {
     text: "จากตารางแผนการผลิต ข้อใดคือจำนวน Lot size",
     image: "../assets/images/5.png",
-    options: ["CS #16", "LED1050", "(60)", "4"],
+    options: ["CS #16", "LED1050-90", "(60)", "4"],
     answer: "(60)",
   },
   {
     text: "จากตารางแผนการผลิต ข้อใดคือจำนวนวง / 1 ชั่วโมงการผลิต",
     image: "../assets/images/5.png",
-    options: ["CS #16", "LED1050", "(60)", "4"],
+    options: ["CS #16", "LED1050-90", "(60)", "4"],
     answer: "4",
   },
   {
